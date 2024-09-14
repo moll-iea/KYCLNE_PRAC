@@ -64,7 +64,19 @@ app.put('/api/services/:id', async (req, res) => {
     }
 });
 
-
+// Delete a service by ID
+app.delete('/api/services/:id', async (req, res) => {
+    try {
+        const service = await Service.findByIdAndDelete(req.params.id);
+        if (!service) {
+            return res.status(404).send(`Cannot find service with that ID ${req.params.id}`);
+        }
+        res.send(service);
+    } catch (error) {
+        console.log('Error:', error.message);
+        res.status(500).send('Internal server error');
+    }
+});
 
 const mongoUri = process.env.MONGODB_URI;
 console.log('Connecting to MongoDB with URI:', mongoUri);
