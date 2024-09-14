@@ -6,7 +6,7 @@ const serviceSchema = mongoose.Schema({
         required: [true, 'Service name is required']
     },
     description: {
-        type: longString,
+        type: String,
         required: [true, 'Description is required']
     },
     price: {
