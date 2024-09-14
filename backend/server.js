@@ -8,20 +8,35 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// Declare routes
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
-
-app.get('/blog', (req, res) => {
-    res.send('Hello Blog my name is ganda');
-});
-
 app.listen(3000, () => {
     console.log('Node server running on 3000');
 });
 
-// Connect to MongoDB
+//Get a service by ID (Read a service)
+app.get('/api/services/:id', async(req, res) => {
+    try {
+        const service = await Service.findById(req.params.id);
+        if(!service) {
+            return res.status(404).send('Service not found');
+        }
+        res.send(service);
+    } catch (error) {
+        console.log('Error:', error.message);
+        res.status(500).send('Internal server error');
+    }
+});
+
+//Get all services (Read all services)
+app.get('/api/services', async(req, res) => {
+    try {
+        const services = await Service.find();
+        res.send(services);
+    } catch (error) {
+        console.log('Error:', error.message);
+        res.status(500).send('Internal server error');
+    }
+});
+// Connect to MongoDB (Save a new service)
 app.post('/api/services', async(req, res) => {
    try {
         const service = await Service.create(req.body)
