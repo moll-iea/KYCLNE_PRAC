@@ -7,6 +7,8 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+    // use in the api to parse the body of the request
+app.use(express.urlencoded({ extended: false }));
 
 app.listen(3000, () => {
     console.log('Node server running on 3000');
@@ -46,6 +48,23 @@ app.post('/api/services', async(req, res) => {
         res.status(500).send('Internal server error');
    }
 });
+
+// Update a service by ID
+app.put('/api/services/:id', async (req, res) => {
+    try {
+        const service = await Service.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        if (!service) {
+            // Cannot find any service with that ID
+            return res.status(404).send(`Cannot find service with that ID ${req.params.id}`);
+        }
+        res.send(service);
+    } catch (error) {
+        console.log('Error:', error.message);
+        res.status(500).send('Internal server error');
+    }
+});
+
+
 
 const mongoUri = process.env.MONGODB_URI;
 console.log('Connecting to MongoDB with URI:', mongoUri);
