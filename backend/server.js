@@ -5,9 +5,16 @@ const mongoose = require('mongoose');
 const serviceRouter = require('./routes/service.route');
 const serviceError = require('./middleware/serviceError.middleware'); // Import the custom error middleware
 
+var cors = require('cors');
+
 const app = express();
 
+// Cors middleware
+var corsOptions = {
+    origin: 'FRONTEND_URI',
+}
 // Middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -23,7 +30,7 @@ app.listen(3000, () => {
 
 const mongoUri = process.env.MONGODB_URI;
 console.log('Connecting to MongoDB with URI:', mongoUri);
-
+const FRONTEND_URI = process.env.FRONTEND_URL;
 mongoose.connect(mongoUri)
     .then(() => {
         console.log('Connected to MongoDB');
