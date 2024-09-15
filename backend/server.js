@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const serviceRouter = require('./routes/service.route');
+const serviceError = require('./middleware/serviceError.middleware'); // Import the custom error middleware
+
 const app = express();
 
 // Middleware
@@ -11,6 +13,9 @@ app.use(express.urlencoded({ extended: false }));
 
 // Mount the service router
 app.use('/api/services', serviceRouter);
+
+// Error handling middleware
+app.use(serviceError);
 
 app.listen(3000, () => {
     console.log('Node server running on 3000');
