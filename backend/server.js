@@ -1,11 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const serviceRouter = require('./routes/service.route');
 const serviceError = require('./middleware/serviceError.middleware'); // Import the custom error middleware
-
-var cors = require('cors');
 
 const app = express();
 
@@ -13,10 +12,16 @@ const app = express();
 var corsOptions = {
     origin: 'FRONTEND_URI',
 }
+app.use(cors(corsOptions));
+
 // Middleware
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Root route
+app.get('/', (req, res) => {
+    res.send('Welcome to the KYCLNE PRAC API');
+});
 
 // Mount the service router
 app.use('/api/services', serviceRouter);
@@ -30,7 +35,7 @@ app.listen(3000, () => {
 
 const mongoUri = process.env.MONGODB_URI;
 console.log('Connecting to MongoDB with URI:', mongoUri);
-const FRONTEND_URI = process.env.FRONTEND_URL;
+const FRONTEND_URI = process.env.FRONTEND_URI;
 mongoose.connect(mongoUri)
     .then(() => {
         console.log('Connected to MongoDB');
